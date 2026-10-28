@@ -2,12 +2,8 @@
 	"format": 1,
 	"id": "mxtiy.audiofix",
 	"name": "Bluetooth Audio Fix",
-	"description": "Prevents Discord from switching to handsfree (HFP) mode during calls by patching the native audio manager's setCommunicationModeOn method.",
+	"description": "Prevents Discord from switching to hands-free mode during calls.",
 	"author": "NoReplyUI5 <1053918356375351386> (https://github.com/NoReplyUI5 \"GitHub\")",
-	"contributors": [
-		"Narwhal",
-		"redstonekasi"
-	],
 	"icon": "voice_bar_bluetooth",
 	"version": "1.0.0",
 	"dependencies": {
