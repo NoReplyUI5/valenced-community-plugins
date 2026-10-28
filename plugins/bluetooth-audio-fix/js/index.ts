@@ -1,30 +1,21 @@
-export default plugin({
-	jsonStorage: {
-		load: true,
-		default: {},
-	},
-	start({ cleanup, jsonStorage, plugin }) {
-		const audioManager =
-			valenced.react.ReactNative.TurboModuleRegistry.get('NativeAudioManagerModule') ??
-			valenced.react.ReactNative.TurboModuleRegistry.get('RTNAudioManager')
+import { getNativeModule } from '@valenced/modules/native'
+import { instead } from '@valenced/patcher'
+import { noop } from '@valenced/utils/callback'
 
+export default plugin({
+	start({ cleanup, jsonStorage, plugin }) {
+		if (plugin.startedLate) {
+			plugin.requireReload()
+			return
+		}
+		
+		const audioManager = getNativeModule('NativeAudioManagerModule') ?? getNativeModule('RTNAudioManager')
 		if (!audioManager) {
-			console.log('[audiofix] Audio manager module not found')
+			plugin.reportError("AudioManager module not found")
+			plugin.disable()
 			return
 		}
 
-		const original = audioManager.setCommunicationModeOn
-		audioManager.setCommunicationModeOn = () => {}
-
-		cleanup(() => {
-			audioManager.setCommunicationModeOn = original
-			console.log('[audiofix] Restored setCommunicationModeOn')
-		})
-
-		console.log('[audiofix] Patched setCommunicationModeOn')
-
-		if (plugin.startedLate) {
-			plugin.requireReload()
-		}
+		cleanup(instead(audioManager, 'setCommunicationModeOn', noop))
 	},
 })
